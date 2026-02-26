@@ -1,6 +1,7 @@
 Football Lover - Project Description
 
 Overview
+
 This is an Android application for viewing football data via TheSportsDB API:
 - leagues list
 - matches by date
