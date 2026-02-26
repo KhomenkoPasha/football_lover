@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">Football lover</string>
+
+    <!-- Navigation -->
+    <string name="nav_matches">Усі матчі</string>
+    <string name="nav_live">LIVE</string>
+    <string name="nav_favorites">Обране</string>
+    <string name="nav_leagues">Ліги</string>
+
+    <!-- Common -->
+    <string name="action_refresh">Оновити</string>
+    <string name="action_standings">Таблиці</string>
+    <string name="action_add_favorite_league">Додати в обране</string>
+    <string name="action_remove_favorite_league">Видалити з обраного</string>
+    <string name="label_today">СЬОГОДНІ</string>
+    <string name="label_total">Усього</string>
+    <string name="label_all_matches">Усі матчі</string>
+    <string name="label_live">LIVE</string>
+    <string name="section_favorites">УЛЮБЛЕНІ ЗМАГАННЯ</string>
+    <string name="section_other">ІНШІ ЗМАГАННЯ (А-Я)</string>
+
+    <!-- Search -->
+    <string name="title_teams">Команди</string>
+    <string name="title_find_team">Знайти команду</string>
+    <string name="hint_team_search">наприклад, Arsenal</string>
+    <string name="action_search">Пошук</string>
+    <string name="hint_press_search">Натисніть «Пошук», щоб знайти команди</string>
+    <string name="msg_no_teams">Команд ще немає. Спробуйте пошук.</string>
+    <string name="msg_found_teams">Знайдено %1$d команд</string>
+    <string name="title_league_teams">Команди ліги</string>
+    <string name="msg_no_league_teams">Для цієї ліги команди не знайдено.</string>
+
+    <!-- Matches -->
+    <string name="tab_next">Найближчі</string>
+    <string name="tab_last">Минулі</string>
+    <string name="filter_finished_matches">Тільки завершені матчі</string>
+    <string name="msg_no_matches">Матчів немає.</string>
+    <string name="msg_no_favorite_leagues">Ще немає улюблених ліг. Натисніть зірочку у вкладці «Усі матчі».</string>
+
+    <!-- Match detail -->
+    <string name="title_match_details">Деталі матчу</string>
+    <string name="action_retry">Спробувати ще раз</string>
+    <string name="msg_no_score">Ще без рахунку</string>
+
+    <!-- Standings -->
+    <string name="title_standings">Таблиці</string>
+    <string name="hint_search_league">Пошук ліги, напр. Premier League</string>
+    <string name="hint_season">Сезон, напр. 2024-2025</string>
+    <string name="msg_no_table">Немає даних таблиці за цей сезон.</string>
+    <string name="label_table_for">Таблиця: %1$s</string>
+
+    <!-- Settings -->
+    <string name="title_settings">Налаштування</string>
+    <string name="title_language">Мова</string>
+    <string name="action_back">Назад</string>
+    <string name="lang_english">Англійська</string>
+    <string name="lang_ukrainian">Українська</string>
+    <string name="placeholder_live">LIVE</string>
+    <string name="placeholder_favorites">Обране</string>
+    <string name="placeholder_leagues">Ліги</string>
+</resources>
