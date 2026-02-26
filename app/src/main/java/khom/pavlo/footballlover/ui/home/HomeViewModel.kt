@@ -11,6 +11,7 @@ import khom.pavlo.footballlover.domain.usecase.GetEventsByDayUseCase
 import khom.pavlo.footballlover.domain.usecase.GetFavoriteLeaguesUseCase
 import khom.pavlo.footballlover.domain.usecase.GetLeagueBadgeUseCase
 import khom.pavlo.footballlover.domain.usecase.GetLeaguesUseCase
+import khom.pavlo.footballlover.domain.usecase.GetLiveEventsUseCase
 import khom.pavlo.footballlover.domain.usecase.RemoveFavoriteLeagueUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,7 +28,13 @@ data class HomeUiState(
     val error: String? = null,
     val totalMatches: Int = 0,
     val favoriteLeagues: List<LeagueRow> = emptyList(),
-    val otherLeagues: List<LeagueRow> = emptyList()
+    val otherLeagues: List<LeagueRow> = emptyList(),
+    val todayFavoriteMatches: List<Event> = emptyList(),
+    val isLoadingTodayFavoriteMatches: Boolean = false,
+    val todayFavoriteMatchesError: String? = null,
+    val liveMatches: List<Event> = emptyList(),
+    val isLoadingLiveMatches: Boolean = false,
+    val liveMatchesError: String? = null
 )
 
 class HomeViewModel(
@@ -36,7 +43,8 @@ class HomeViewModel(
     private val getFavoriteLeaguesUseCase: GetFavoriteLeaguesUseCase,
     private val addFavoriteLeagueUseCase: AddFavoriteLeagueUseCase,
     private val removeFavoriteLeagueUseCase: RemoveFavoriteLeagueUseCase,
-    private val getLeagueBadgeUseCase: GetLeagueBadgeUseCase
+    private val getLeagueBadgeUseCase: GetLeagueBadgeUseCase,
+    private val getLiveEventsUseCase: GetLiveEventsUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeUiState())
     val state: StateFlow<HomeUiState> = _state
@@ -46,14 +54,18 @@ class HomeViewModel(
     private var allSoccerLeagues: List<League> = emptyList()
     private var favoriteLeagueSnapshots: List<FavoriteLeague> = emptyList()
     private var favoriteLeagueIds: Set<String> = emptySet()
+    private var latestTodayEvents: List<Event> = emptyList()
     private val leagueBadgesById = mutableMapOf<String, String?>()
     private val badgeRequestsInFlight = mutableSetOf<String>()
+    private var dayRequestVersion: Long = 0
 
     init {
         val days = buildDays(LocalDate.now())
         _state.update { it.copy(days = days, selectedDayIndex = 2) }
         loadFavorites()
         loadLeagueCatalog()
+        loadTodayFavoriteMatches()
+        loadLiveMatches()
         loadDay(days[2].apiDate)
     }
 
@@ -92,6 +104,7 @@ class HomeViewModel(
         }
         favoriteLeagueIds = favoriteLeagueSnapshots.map { it.leagueId }.toSet()
         refreshLeagueLists()
+        refreshTodayFavoriteMatches()
 
         viewModelScope.launch {
             try {
@@ -126,12 +139,18 @@ class HomeViewModel(
     }
 
     private fun loadDay(apiDate: String) {
-        _state.update { it.copy(isLoading = true, error = null) }
+        val requestVersion = ++dayRequestVersion
+        _state.update { it.copy(isLoading = true, error = null, totalMatches = 0) }
         viewModelScope.launch {
             when (val result = getEventsByDayUseCase(apiDate)) {
                 is Result.Success -> {
+                    if (requestVersion != dayRequestVersion) return@launch
                     val events = result.data
                     latestEvents = events
+                    if (apiDate == todayApiDate()) {
+                        latestTodayEvents = events
+                        refreshTodayFavoriteMatches()
+                    }
                     val grouped = groupByLeague(events, allSoccerLeagues, favoriteLeagueSnapshots)
                     _state.update {
                         it.copy(
@@ -144,7 +163,47 @@ class HomeViewModel(
                     }
                 }
                 is Result.Error -> {
-                    _state.update { it.copy(isLoading = false, error = result.message) }
+                    if (requestVersion != dayRequestVersion) return@launch
+                    latestEvents = emptyList()
+                    refreshLeagueLists()
+                    _state.update { it.copy(isLoading = false, error = result.message, totalMatches = 0) }
+                    if (apiDate == todayApiDate()) {
+                        _state.update {
+                            it.copy(
+                                isLoadingTodayFavoriteMatches = false,
+                                todayFavoriteMatchesError = result.message
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun loadLiveMatches(forceRefresh: Boolean = false) {
+        if (!forceRefresh && (state.value.isLoadingLiveMatches || state.value.liveMatches.isNotEmpty())) {
+            return
+        }
+        _state.update { it.copy(isLoadingLiveMatches = true, liveMatchesError = null) }
+        viewModelScope.launch {
+            when (val result = getLiveEventsUseCase("Soccer")) {
+                is Result.Success -> {
+                    _state.update {
+                        it.copy(
+                            isLoadingLiveMatches = false,
+                            liveMatches = result.data.sortedWith(compareBy<Event>({ it.leagueName ?: "" }, { it.name })),
+                            liveMatchesError = null
+                        )
+                    }
+                }
+                is Result.Error -> {
+                    _state.update {
+                        it.copy(
+                            isLoadingLiveMatches = false,
+                            liveMatchesError = result.message,
+                            liveMatches = emptyList()
+                        )
+                    }
                 }
             }
         }
@@ -155,8 +214,45 @@ class HomeViewModel(
             favoriteLeagueSnapshots = getFavoriteLeaguesUseCase()
             favoriteLeagueIds = favoriteLeagueSnapshots.map { it.leagueId }.toSet()
             refreshLeagueLists()
+            refreshTodayFavoriteMatches()
         }
     }
+
+    private fun loadTodayFavoriteMatches() {
+        _state.update { it.copy(isLoadingTodayFavoriteMatches = true, todayFavoriteMatchesError = null) }
+        val todayDate = todayApiDate()
+        viewModelScope.launch {
+            when (val result = getEventsByDayUseCase(todayDate)) {
+                is Result.Success -> {
+                    latestTodayEvents = result.data
+                    _state.update { it.copy(isLoadingTodayFavoriteMatches = false, todayFavoriteMatchesError = null) }
+                    refreshTodayFavoriteMatches()
+                }
+                is Result.Error -> {
+                    _state.update {
+                        it.copy(
+                            isLoadingTodayFavoriteMatches = false,
+                            todayFavoriteMatchesError = result.message
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun refreshTodayFavoriteMatches() {
+        val filtered = latestTodayEvents
+            .filter { event -> !event.leagueId.isNullOrBlank() && favoriteLeagueIds.contains(event.leagueId) }
+            .sortedWith(compareBy<Event>({ it.time ?: "" }, { it.name }))
+
+        _state.update {
+            it.copy(
+                todayFavoriteMatches = filtered
+            )
+        }
+    }
+
+    private fun todayApiDate(): String = LocalDate.now().format(apiDateFormatter)
 
     private fun loadLeagueCatalog() {
         viewModelScope.launch {

@@ -34,7 +34,8 @@ import androidx.compose.material.icons.filled.Settings
 @Composable
 fun MainHomeScreen(
     onOpenSettings: () -> Unit,
-    onOpenLeague: (leagueId: String, leagueName: String) -> Unit
+    onOpenLeague: (leagueId: String, leagueName: String) -> Unit,
+    onOpenEvent: (eventId: String) -> Unit
 ) {
     var selected by remember { mutableStateOf(HomeTab.MATCHES) }
     val homeViewModel: HomeViewModel = viewModel(
@@ -44,7 +45,8 @@ fun MainHomeScreen(
             AppContainer.getFavoriteLeaguesUseCase,
             AppContainer.addFavoriteLeagueUseCase,
             AppContainer.removeFavoriteLeagueUseCase,
-            AppContainer.getLeagueBadgeUseCase
+            AppContainer.getLeagueBadgeUseCase,
+            AppContainer.getLiveEventsUseCase
         )
     )
 
@@ -80,13 +82,21 @@ fun MainHomeScreen(
                     contentPadding = innerPadding
                 )
             }
-            HomeTab.LIVE -> PlaceholderScreen(stringResource(R.string.placeholder_live), innerPadding)
+            HomeTab.LIVE -> LiveMatchesHomeScreen(
+                viewModel = homeViewModel,
+                onEventSelected = { event -> onOpenEvent(event.id) },
+                contentPadding = innerPadding
+            )
             HomeTab.FAVORITES -> FavoritesHomeScreen(
                 viewModel = homeViewModel,
                 onLeagueSelected = onOpenLeague,
                 contentPadding = innerPadding
             )
-            HomeTab.LEAGUES -> PlaceholderScreen(stringResource(R.string.placeholder_leagues), innerPadding)
+            HomeTab.LEAGUES -> FavoriteMatchesHomeScreen(
+                viewModel = homeViewModel,
+                onEventSelected = { event -> onOpenEvent(event.id) },
+                contentPadding = innerPadding
+            )
         }
     }
 }

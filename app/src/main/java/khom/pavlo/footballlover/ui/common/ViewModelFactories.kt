@@ -8,6 +8,7 @@ import khom.pavlo.footballlover.domain.usecase.GetFavoriteLeaguesUseCase
 import khom.pavlo.footballlover.domain.usecase.GetLastEventsUseCase
 import khom.pavlo.footballlover.domain.usecase.GetLeagueBadgeUseCase
 import khom.pavlo.footballlover.domain.usecase.GetLeaguesUseCase
+import khom.pavlo.footballlover.domain.usecase.GetLiveEventsUseCase
 import khom.pavlo.footballlover.domain.usecase.GetNextEventsUseCase
 import khom.pavlo.footballlover.domain.usecase.AddFavoriteLeagueUseCase
 import khom.pavlo.footballlover.domain.usecase.RemoveFavoriteLeagueUseCase
@@ -80,7 +81,8 @@ class HomeViewModelFactory(
     private val getFavoriteLeaguesUseCase: GetFavoriteLeaguesUseCase,
     private val addFavoriteLeagueUseCase: AddFavoriteLeagueUseCase,
     private val removeFavoriteLeagueUseCase: RemoveFavoriteLeagueUseCase,
-    private val getLeagueBadgeUseCase: GetLeagueBadgeUseCase
+    private val getLeagueBadgeUseCase: GetLeagueBadgeUseCase,
+    private val getLiveEventsUseCase: GetLiveEventsUseCase
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
@@ -91,7 +93,8 @@ class HomeViewModelFactory(
                 getFavoriteLeaguesUseCase,
                 addFavoriteLeagueUseCase,
                 removeFavoriteLeagueUseCase,
-                getLeagueBadgeUseCase
+                getLeagueBadgeUseCase,
+                getLiveEventsUseCase
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

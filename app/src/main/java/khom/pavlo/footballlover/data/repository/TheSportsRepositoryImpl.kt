@@ -27,6 +27,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class TheSportsRepositoryImpl(
     private val api: TheSportsDbApi,
@@ -189,6 +191,22 @@ class TheSportsRepositoryImpl(
         }
     }
 
+    override suspend fun liveEvents(sport: String): Result<List<Event>> {
+        return withContext(Dispatchers.IO) {
+            safeCall {
+                // `livescore.php` often returns 404 for the demo key (123), so build the Live tab
+                // from today's matches and keep only events that are currently in progress.
+                val today = LocalDate.now().format(DateTimeFormatter.ISO_DATE)
+                val events = api.eventsDay(date = today, sport = sport)
+                    .events
+                    .orEmpty()
+                    .filter { isLiveStatus(it.strStatus) }
+                    .mapNotNull { it.eventDtoToDomain() }
+                Result.Success(events)
+            }
+        }
+    }
+
     private suspend fun eventsByType(
         teamId: String,
         type: EventType,
@@ -246,6 +264,21 @@ class TheSportsRepositoryImpl(
 
     private fun isExpired(updatedAt: Long, ttlMs: Long): Boolean {
         return System.currentTimeMillis() - updatedAt > ttlMs
+    }
+
+    private fun isLiveStatus(status: String?): Boolean {
+        val value = status?.trim()?.lowercase() ?: return false
+        return value.contains("live") ||
+            value.contains("in progress") ||
+            value == "ht" ||
+            value == "1h" ||
+            value == "2h" ||
+            value.contains("1st half") ||
+            value.contains("2nd half") ||
+            value.contains("half-time") ||
+            value.contains("half time") ||
+            value.contains("extra time") ||
+            value.contains("pen")
     }
 }
 

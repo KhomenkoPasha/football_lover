@@ -62,11 +62,11 @@ fun MatchesHomeScreen(
     Column(
         modifier = Modifier
             .padding(contentPadding)
-            .padding(top = 8.dp)
+            .padding(top = 12.dp)
     ) {
         LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            contentPadding = PaddingValues(horizontal = 20.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(state.days.indices.toList()) { index ->
                 val day = state.days[index]
@@ -145,11 +145,17 @@ fun MatchesHomeScreen(
 
 @Composable
 private fun DayChip(label: String, date: String, selected: Boolean, onClick: () -> Unit) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier.padding(vertical = 4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         AssistChip(
             onClick = onClick,
             label = {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     Text(text = label, style = MaterialTheme.typography.labelLarge)
                     Text(text = date, style = MaterialTheme.typography.labelMedium)
                 }
@@ -161,7 +167,7 @@ private fun DayChip(label: String, date: String, selected: Boolean, onClick: () 
         if (selected) {
             Box(
                 modifier = Modifier
-                    .padding(top = 4.dp)
+                    .padding(top = 6.dp)
                     .height(3.dp)
                     .fillMaxWidth(0.6f)
                     .background(MaterialTheme.colorScheme.primary)

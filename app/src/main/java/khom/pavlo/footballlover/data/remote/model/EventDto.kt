@@ -11,6 +11,7 @@ data class EventDto(
     @Json(name = "strEvent") val strEvent: String?,
     @Json(name = "dateEvent") val dateEvent: String?,
     @Json(name = "strTime") val strTime: String?,
+    @Json(name = "strStatus") val strStatus: String?,
     @Json(name = "strHomeTeam") val strHomeTeam: String?,
     @Json(name = "strAwayTeam") val strAwayTeam: String?,
     @Json(name = "strHomeTeamBadge") val strHomeTeamBadge: String?,
