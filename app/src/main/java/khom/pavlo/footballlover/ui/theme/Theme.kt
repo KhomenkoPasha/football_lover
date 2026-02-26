@@ -12,12 +12,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Green300,
-    onPrimary = Green900,
+    primary = GreenA200,
+    onPrimary = Color(0xFF04210A),
     primaryContainer = Green700,
-    onPrimaryContainer = Green100,
-    secondary = Green400,
-    onSecondary = Green900,
+    onPrimaryContainer = Color(0xFFE8F8EA),
+    secondary = Green300,
+    onSecondary = Color(0xFF08210D),
     secondaryContainer = Green800,
     onSecondaryContainer = Green100,
     tertiary = GreenA200,
@@ -26,7 +26,7 @@ private val DarkColorScheme = darkColorScheme(
     onTertiaryContainer = Green50,
     background = GreenBackgroundDark,
     onBackground = GreenOnSurfaceDark,
-    surface = GreenBackgroundDark,
+    surface = GreenSurfaceDark,
     onSurface = GreenOnSurfaceDark,
     surfaceVariant = GreenSurfaceVariantDark,
     onSurfaceVariant = GreenOnSurfaceVariantDark,
@@ -35,26 +35,26 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Green700,
+    primary = Green800,
     onPrimary = Color.White,
-    primaryContainer = Green100,
+    primaryContainer = Green200,
     onPrimaryContainer = Green900,
-    secondary = Green600,
+    secondary = Green700,
     onSecondary = Color.White,
-    secondaryContainer = Green50,
+    secondaryContainer = Green100,
     onSecondaryContainer = Green900,
-    tertiary = Green500,
+    tertiary = Green600,
     onTertiary = Color.White,
     tertiaryContainer = Green200,
     onTertiaryContainer = Green900,
     background = GreenBackgroundLight,
     onBackground = GreenOnSurfaceLight,
-    surface = GreenBackgroundLight,
+    surface = GreenSurfaceLight,
     onSurface = GreenOnSurfaceLight,
     surfaceVariant = GreenSurfaceVariantLight,
     onSurfaceVariant = GreenOnSurfaceVariantLight,
     outline = GreenOutlineLight,
-    surfaceTint = Green700
+    surfaceTint = Green800
 )
 
 @Composable

@@ -31,6 +31,7 @@ import khom.pavlo.footballlover.domain.usecase.GetEventsByDayUseCase
 import khom.pavlo.footballlover.domain.usecase.GetFavoriteLeaguesUseCase
 import khom.pavlo.footballlover.domain.usecase.GetLeagueBadgeUseCase
 import khom.pavlo.footballlover.domain.usecase.GetLeaguesUseCase
+import khom.pavlo.footballlover.domain.usecase.GetLiveEventsUseCase
 import khom.pavlo.footballlover.domain.usecase.RemoveFavoriteLeagueUseCase
 import org.junit.After
 import org.junit.Before
@@ -67,7 +68,8 @@ class HomeFavoritesFlowUiTest {
             getFavoriteLeaguesUseCase = GetFavoriteLeaguesUseCase(fakeRepository),
             addFavoriteLeagueUseCase = AddFavoriteLeagueUseCase(fakeRepository),
             removeFavoriteLeagueUseCase = RemoveFavoriteLeagueUseCase(fakeRepository),
-            getLeagueBadgeUseCase = GetLeagueBadgeUseCase(fakeRepository)
+            getLeagueBadgeUseCase = GetLeagueBadgeUseCase(fakeRepository),
+            getLiveEventsUseCase = GetLiveEventsUseCase(fakeRepository)
         )
 
         composeRule.setContent {
@@ -193,5 +195,9 @@ private class FakeHomeRepository : TheSportsRepository {
                 )
             )
         )
+    }
+
+    override suspend fun liveEvents(sport: String): Result<List<Event>> {
+        return Result.Success(emptyList())
     }
 }

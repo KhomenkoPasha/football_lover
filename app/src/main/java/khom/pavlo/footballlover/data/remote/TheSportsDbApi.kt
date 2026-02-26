@@ -46,6 +46,11 @@ interface TheSportsDbApi {
         @Query("l") league: String? = null
     ): EventsResponse
 
+    @GET("api/v1/json/123/livescore.php")
+    suspend fun liveScores(
+        @Query("s") sport: String? = null
+    ): EventsResponse
+
     @GET("api/v1/json/123/all_leagues.php")
     suspend fun allLeagues(): LeaguesResponse
 

@@ -2,10 +2,10 @@
     <string name="app_name">Football lover</string>
 
     <!-- Navigation -->
-    <string name="nav_matches">Усі матчі</string>
+    <string name="nav_matches">Усі ліги</string>
     <string name="nav_live">LIVE</string>
     <string name="nav_favorites">Обране</string>
-    <string name="nav_leagues">Ліги</string>
+    <string name="nav_leagues">Матчі</string>
 
     <!-- Common -->
     <string name="action_refresh">Оновити</string>
@@ -35,7 +35,9 @@
     <string name="tab_last">Минулі</string>
     <string name="filter_finished_matches">Тільки завершені матчі</string>
     <string name="msg_no_matches">Матчів немає.</string>
-    <string name="msg_no_favorite_leagues">Ще немає улюблених ліг. Натисніть зірочку у вкладці «Усі матчі».</string>
+    <string name="msg_no_favorite_leagues">Ще немає улюблених ліг. Натисніть зірочку у вкладці «Усі ліги».</string>
+    <string name="msg_no_favorite_matches_today">Сьогодні немає матчів в улюблених лігах.</string>
+    <string name="msg_no_live_matches_now">Зараз немає матчів у LIVE.</string>
 
     <!-- Match detail -->
     <string name="title_match_details">Деталі матчу</string>
@@ -57,5 +59,5 @@
     <string name="lang_ukrainian">Українська</string>
     <string name="placeholder_live">LIVE</string>
     <string name="placeholder_favorites">Обране</string>
-    <string name="placeholder_leagues">Ліги</string>
+    <string name="placeholder_leagues">Матчі</string>
 </resources>

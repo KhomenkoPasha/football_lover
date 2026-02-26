@@ -11,6 +11,7 @@ import khom.pavlo.footballlover.domain.usecase.GetFavoriteLeaguesUseCase
 import khom.pavlo.footballlover.domain.usecase.GetLastEventsUseCase
 import khom.pavlo.footballlover.domain.usecase.GetLeagueBadgeUseCase
 import khom.pavlo.footballlover.domain.usecase.GetLeaguesUseCase
+import khom.pavlo.footballlover.domain.usecase.GetLiveEventsUseCase
 import khom.pavlo.footballlover.domain.usecase.GetNextEventsUseCase
 import khom.pavlo.footballlover.domain.usecase.AddFavoriteLeagueUseCase
 import khom.pavlo.footballlover.domain.usecase.RemoveFavoriteLeagueUseCase
@@ -48,6 +49,8 @@ object AppContainer {
         private set
     lateinit var getLeagueBadgeUseCase: GetLeagueBadgeUseCase
         private set
+    lateinit var getLiveEventsUseCase: GetLiveEventsUseCase
+        private set
 
     fun init(context: Context) {
         if (initialized) return
@@ -68,6 +71,7 @@ object AppContainer {
             addFavoriteLeagueUseCase = AddFavoriteLeagueUseCase(repository)
             removeFavoriteLeagueUseCase = RemoveFavoriteLeagueUseCase(repository)
             getLeagueBadgeUseCase = GetLeagueBadgeUseCase(repository)
+            getLiveEventsUseCase = GetLiveEventsUseCase(repository)
             initialized = true
         }
     }

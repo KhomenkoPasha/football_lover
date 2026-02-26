@@ -20,4 +20,5 @@ interface TheSportsRepository {
     suspend fun removeFavoriteLeague(leagueId: String)
     suspend fun standings(leagueId: String, season: String, forceRefresh: Boolean = false): Result<List<StandingRow>>
     suspend fun eventsByDay(date: String, sport: String = "Soccer"): Result<List<Event>>
+    suspend fun liveEvents(sport: String = "Soccer"): Result<List<Event>>
 }

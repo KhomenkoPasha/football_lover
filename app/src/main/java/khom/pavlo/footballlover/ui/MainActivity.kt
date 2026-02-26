@@ -67,6 +67,9 @@ fun FootballLoverApp() {
                 onOpenLeague = { leagueId, leagueName ->
                     val encoded = URLEncoder.encode(leagueName, StandardCharsets.UTF_8.toString())
                     navController.navigate("${Routes.LEAGUE_TEAMS}/$leagueId/$encoded")
+                },
+                onOpenEvent = { eventId ->
+                    navController.navigate("${Routes.EVENT}/$eventId")
                 }
             )
         }
